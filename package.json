@@ -1,0 +1,29 @@
+{
+  "name": "japan-restaurant-guide",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:fresh-data": "npm run data:build && next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "data:build": "python3 scripts/build_restaurant_dataset.py",
+    "data:export-supabase": "python3 scripts/export_restaurants_for_supabase.py"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.1",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
+    "typescript": "^5.0.0"
+  }
+}
