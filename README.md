@@ -94,3 +94,7 @@ npm run data:build
 npm run data:export-supabase
 npm run build:fresh-data
 ```
+=======
+# japan_website
+Website to share my Japanese experience 
+>>>>>>> 60a7156fe65fd59943ff47e9d2e9793f83c910d0
