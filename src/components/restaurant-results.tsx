@@ -180,20 +180,18 @@ export function RestaurantResults({ restaurants, initialCuisine, initialPrefectu
                   <div className="card-meta">
                     {restaurant.rating ? (
                       <div className="rating-stack">
-                        <p className="rating-line">
-                          <strong>{restaurant.rating.toFixed(1)}</strong>
-                          <span className="star-line" aria-hidden="true">
-                            {renderStars(restaurant.rating)}
-                          </span>
-                          <span>({formatReviewCount(restaurant.reviewCount)})</span>
-                          {restaurant.priceLevel ? <span>· {restaurant.priceLevel}</span> : null}
+                        <p className="type-line">
+                          {restaurant.groupedCuisineType} spot
+                          {restaurant.priceLevel ? ` · ${restaurant.priceLevel}` : ""}
                         </p>
-                        <p className="type-line">{restaurant.groupedCuisineType} spot</p>
                       </div>
                     ) : (
                       <div className="rating-stack">
                         <p className="muted">Google rating not available yet</p>
-                        <p className="type-line">{restaurant.groupedCuisineType} spot</p>
+                        <p className="type-line">
+                          {restaurant.groupedCuisineType} spot
+                          {restaurant.priceLevel ? ` · ${restaurant.priceLevel}` : ""}
+                        </p>
                       </div>
                     )}
 
