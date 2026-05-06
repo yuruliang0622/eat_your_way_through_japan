@@ -13,7 +13,10 @@ async function getPlacePhoto(placeId: string, apiKey: string) {
   });
 
   if (!detailsResponse.ok) {
-    return null;
+    return {
+      error: "google_details_failed",
+      status: detailsResponse.status,
+    } as const;
   }
 
   const details = (await detailsResponse.json()) as {
@@ -21,7 +24,7 @@ async function getPlacePhoto(placeId: string, apiKey: string) {
   };
   const photoName = details.photos?.[0]?.name;
   if (!photoName) {
-    return null;
+    return { error: "no_photo" } as const;
   }
 
   const mediaUrl = new URL(`https://places.googleapis.com/v1/${photoName}/media`);
@@ -34,25 +37,32 @@ async function getPlacePhoto(placeId: string, apiKey: string) {
   });
 
   if (!mediaResponse.ok) {
-    return null;
+    return {
+      error: "google_media_failed",
+      status: mediaResponse.status,
+    } as const;
   }
 
   const media = (await mediaResponse.json()) as { photoUri?: string };
-  return media.photoUri ?? null;
+  return media.photoUri ? ({ photoUri: media.photoUri } as const) : ({ error: "no_photo_uri" } as const);
 }
 
 export async function GET(request: NextRequest) {
   const placeId = request.nextUrl.searchParams.get("placeId");
   const apiKey = getGoogleMapsApiKey();
 
-  if (!placeId || !apiKey) {
-    return new NextResponse(null, { status: 404 });
+  if (!placeId) {
+    return NextResponse.json({ error: "missing_place_id" }, { status: 400 });
   }
 
-  const photoUri = await getPlacePhoto(placeId, apiKey);
-  if (!photoUri) {
-    return new NextResponse(null, { status: 404 });
+  if (!apiKey) {
+    return NextResponse.json({ error: "missing_google_maps_api_key" }, { status: 500 });
   }
 
-  return NextResponse.redirect(photoUri);
+  const result = await getPlacePhoto(placeId, apiKey);
+  if ("error" in result) {
+    return NextResponse.json(result, { status: 404 });
+  }
+
+  return NextResponse.redirect(result.photoUri);
 }
